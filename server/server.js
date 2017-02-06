@@ -127,24 +127,14 @@ app.post('/users/login', (req, res) => {
     res.status(400).send();
   });
 });
-// app.post('/users/login', (req, res) => {
-//   var body = _.pick(req.body, ['email', 'password']);
-//
-//   User.findOne({email: body.email}).then((user) => {
-//     bcrypt.genSalt(10, (err, salt) => {
-//       bcrypt.hash(body.password, salt, (err, hash) => {
-//         console.log('body password', hash);
-//         console.log('user password', user.password);
-//         if (user.password == hash) {
-//           res.status(200).header('x-auth', user.tokens[0].token);
-//         };
-//       })
-//     })
-//   }).catch((e) => {
-//     res.status(401);
-//   });
-//
-// });
+
+app.delete('/users/me/token', authenticate, (req, res) => {
+  req.user.removeToken(req.token).then(() => {
+    res.status(200).send();
+  }, () => {
+    res.status(400).send();
+  })
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`Started on port ${process.env.PORT}`);
